@@ -42,17 +42,17 @@ function schoolLookup() {
 
 // Pass through function for summary information.
 function getSchoolSummary() {
-	return getData($db, "call GetSchoolSummary()");
+	return getData("call GetSchoolSummary()");
 }
 
-// Pass through function for schol secific data.
+// Pass through function for schol specific data.
 function getSchoolData($code, $data=false) {
 	$data = $data ? $data : 'school_information';
-	return getData($db,"call GetSchoolData('$data', $code)");
+	return getData("call GetSchoolData('$data', $code)");
 }
 
 // Run SQL query to get school data.
-function getData(&$db, $procedure) {
+function getData($procedure) {
 	$db = new DBConnect(DB_HOST, DB_USER, DB_PASS);
 	$db->selectDB(DB_NAME);
 	$result = $db->runQuery($procedure);
