@@ -5,70 +5,62 @@ define("DB_USER", "");
 define("DB_PASS", "");
 define("DB_NAME", "schooldata");
 define("DB_HOST", "");
-define("DB_QUERY_TEMPLATE", "SELECT * FROM %tablename% WHERE school_code = '%code%';");
-define("DB_SUMMARY_TEMPLATE", "select school_name_1, school_code, school_level_name, hpaddr, latitude, longitude from school_information;");
 
 // Include required classes.
 require 'classes/limonade/limonade.php';
 require 'classes/db/connect.php';
 
-// Routes.
-dispatch('/', 'index');
-dispatch('/:code/:data', 'lookup');
+// Routes for HTTP requests.
+dispatch('/', 'schoolsSummary');
+dispatch('/:code/:data', 'schoolLookup');
 
-// Return suamry school info.
-function index() {
-	header('Content-type: application/json');
-	return getSchoolSummary();
+// Return summary school info.
+function schoolsSummary() {
+	try {
+		header('Content-type: application/json');
+		return json_encode(getSchoolSummary());
+	}
+	catch (Exception $ex) {
+		// TODO: Log exception message 
+		header("HTTP/1.0 500 Internal Server Error");
+	}
 }
 
 // Lookup school information.
-function lookup() {
-
-	$code = params('code');
-	$data = params('data');
-	header('Content-type: application/json');
-	return getData($code, $data);
-	
+function schoolLookup() {
+	try {
+		$code = (int) params('code');
+		$data = params('data');
+		header('Content-type: application/json');
+		return json_encode(getSchoolData($code, $data));
+	}
+		catch (Exception $ex) {
+		// TODO: Log exception message 
+		header("HTTP/1.0 500 Internal Server Error");
+	}
 }
 
-// Run SQL query to get school specific data.
-function getData($code, $data=false) {
+// Pass through function for summary information.
+function getSchoolSummary() {
+	return getData($db, "call GetSchoolSummary()");
+}
 
+// Pass through function for schol secific data.
+function getSchoolData($code, $data=false) {
+	$data = $data ? $data : 'school_information';
+	return getData($db,"call GetSchoolData('$data', $code)");
+}
+
+// Run SQL query to get school data.
+function getData(&$db, $procedure) {
 	$db = new DBConnect(DB_HOST, DB_USER, DB_PASS);
 	$db->selectDB(DB_NAME);
-
-	if($data) {
-		$query = str_replace(array('%tablename%', '%code%'), array($data, $code), DB_QUERY_TEMPLATE);
-	}
-	else {
-		$query = str_replace(array('%tablename%', '%code%'), array('school_information', $code), DB_QUERY_TEMPLATE);
-	}
-
-	$result = $db->runQuery($query);
-
+	$result = $db->runQuery($procedure);
 	$json_array = array();
 	while($row = mysql_fetch_assoc($result)) {
 		array_push($json_array, $row);	
 	}
-	return json_encode($json_array);
-
-}
-
-// Run SQL query to get school sumamry infrormation.
-function getSchoolSummary() {
-
-	$db = new DBConnect(DB_HOST, DB_USER, DB_PASS);
-	$db->selectDB(DB_NAME);
-
-	$result = $db->runQuery(DB_SUMMARY_TEMPLATE);
-
-	$json_array = array();
-	while($row = mysql_fetch_assoc($result)) {		
-		array_push($json_array, $row);	
-	}
-	return json_encode($json_array);
-
+	return $json_array;
 }
 
 // Run this sucker!

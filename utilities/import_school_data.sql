@@ -163,3 +163,24 @@ LOAD DATA INFILE '/tmp/TEACHER_ATTEND.csv' INTO TABLE teacher_attend
 	LINES TERMINATED BY '\n'
 	IGNORE 1 LINES
 	(school_code,school_year,sch_teacher_attend,sdp_teacher_attend_avg);
+
+-- Stored Procedures.
+DELIMITER $$
+DROP PROCEDURE IF EXISTS `schooldata`.`GetSchoolData`$$
+
+CREATE PROCEDURE `schooldata`.`GetSchoolData`(IN table_name VARCHAR(50), IN code INT)
+BEGIN
+	SET @qry = CONCAT('SELECT * FROM ', table_name, ' WHERE school_code = ?');
+	SET @code = code;
+	PREPARE STMT FROM @qry;
+	EXECUTE STMT USING @code;
+END$$
+
+DROP PROCEDURE IF EXISTS `schooldata`.`getSchoolSummary`$$
+
+CREATE PROCEDURE `schooldata`.`getSchoolSummary`()
+BEGIN
+	SELECT school_name_1, school_code, school_level_name, hpaddr, latitude, longitude FROM school_information;
+END$$
+
+DELIMITER ;
