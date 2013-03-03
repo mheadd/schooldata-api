@@ -17,7 +17,7 @@ class DB {
 	 */
 	public function __construct($host, $user, $password, $dbname) {
 		if(!$this->connection = new mysqli($host, $user, $password, $dbname)) {
-			throw new DBException(mysqli_error());
+			throw new DBException("Unable to connect to MySQL database.");
 		}
 	}
 
@@ -29,7 +29,7 @@ class DB {
 		$this->rowsAffected = $this->connection->affected_rows;
 			
 		if(!$result) {
-			throw new DBException($this->connection->error);
+			throw new DBException("Unable to execute query: " . $query);
 		}
 		return $result;
 	}

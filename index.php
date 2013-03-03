@@ -3,7 +3,7 @@
 // MySQL credentials and SQL queries.
 define("DB_USER", "");
 define("DB_PASS", "");
-define("DB_NAME", "");
+define("DB_NAME", "schooldata");
 define("DB_HOST", "");
 
 // Include required classes.
@@ -22,11 +22,16 @@ run();
  */
 function schoolsSummary() {
 	try {
+		// Set response header.
 		header('Content-type: application/json');
+
+		// Render JSON response.
 		return json_encode(getSchoolSummary());
 	}
 	catch (DBException $ex) {
-		// TODO: Log exception message 
+		openlog("SchoolData", LOG_PID, LOG_LOCAL0);
+		syslog(LOG_ERR, $ex->getMessage());
+		closelog();
 		header("HTTP/1.0 500 Internal Server Error");
 	}
 }
@@ -44,11 +49,13 @@ function schoolLookup() {
 		// Set response header.
 		header('Content-type: application/json');
 
-		// Fetch data.
+		// Render JSON response.
 		return json_encode(getSchoolData($code, $data));
 	}
 	catch (DBException $ex) {
-		// TODO: Log exception message 
+		openlog("SchoolData", LOG_PID, LOG_LOCAL0);
+		syslog(LOG_ERR, $ex->getMessage());
+		closelog();
 		header("HTTP/1.0 500 Internal Server Error");
 	}
 }
