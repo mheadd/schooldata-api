@@ -6,7 +6,7 @@ define("DB_PASS", "");
 define("DB_NAME", "schooldata");
 define("DB_HOST", "");
 
-// A label to use for logging errors.
+// A label to use for logging errors (for greping syslog, yo).
 define("LOG_LABEL", "SchoolData");
 
 // Include required classes.
@@ -27,9 +27,8 @@ function schoolsSummary() {
 	try {
 		// Set response header.
 		header('Content-type: application/json');
-
 		// Render JSON response.
-		return json_encode(getSchoolSummary());
+		return json_encode(getData('GetSchoolSummary'));
 	}
 	catch (DBException $ex) {
 		logError($ex->getMessage());
@@ -46,32 +45,16 @@ function schoolLookup() {
 		// Extract parameters from URL.
 		$code = (int) params('code');
 		$data = params('data');
-
 		// Set response header.
 		header('Content-type: application/json');
-
 		// Render JSON response.
-		return json_encode(getSchoolData($code, $data));
+		$data = $data ? $data : 'school_information';
+		return json_encode(getData('GetSchoolData', array($data, $code)));
 	}
 	catch (DBException $ex) {
 		logError($ex->getMessage());
 		header("HTTP/1.0 500 Internal Server Error");
 	}
-}
-
-/*
- * Return summary school info.
- */
-function getSchoolSummary() {
-	return getData('GetSchoolSummary');
-}
-
-/*
- * Pass through function for schol specific data.
- */
-function getSchoolData($code, $data=false) {
-	$data = $data ? $data : 'school_information';
-	return getData('GetSchoolData', array($data, $code));
 }
 
 /*
