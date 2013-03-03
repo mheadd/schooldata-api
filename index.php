@@ -3,67 +3,82 @@
 // MySQL credentials and SQL queries.
 define("DB_USER", "");
 define("DB_PASS", "");
-define("DB_NAME", "schooldata");
+define("DB_NAME", "");
 define("DB_HOST", "");
 
 // Include required classes.
 require 'classes/limonade/limonade.php';
-require 'classes/db/connect.php';
+require 'classes/db/class.db.php';
 
 // Routes for HTTP requests.
 dispatch('/', 'schoolsSummary');
 dispatch('/:code/:data', 'schoolLookup');
 
-// Return summary school info.
+// Run this sucker!
+run();
+
+/*
+ * Return summary school info.
+ */
 function schoolsSummary() {
 	try {
 		header('Content-type: application/json');
 		return json_encode(getSchoolSummary());
 	}
-	catch (Exception $ex) {
+	catch (DBException $ex) {
 		// TODO: Log exception message 
 		header("HTTP/1.0 500 Internal Server Error");
 	}
 }
 
-// Lookup school information.
+/*
+ * Lookup school information.
+ */
 function schoolLookup() {
 	try {
+		
+		// Extract parameters from URL.
 		$code = (int) params('code');
 		$data = params('data');
+
+		// Set response header.
 		header('Content-type: application/json');
+
+		// Fetch data.
 		return json_encode(getSchoolData($code, $data));
 	}
-		catch (Exception $ex) {
+	catch (DBException $ex) {
 		// TODO: Log exception message 
 		header("HTTP/1.0 500 Internal Server Error");
 	}
 }
 
-// Pass through function for summary information.
+/*
+ * Return summary school info.
+ */
 function getSchoolSummary() {
-	return getData("call GetSchoolSummary()");
+	return getData('GetSchoolSummary');
 }
 
-// Pass through function for schol specific data.
+/*
+ * Pass through function for schol specific data.
+ */
 function getSchoolData($code, $data=false) {
 	$data = $data ? $data : 'school_information';
-	return getData("call GetSchoolData('$data', $code)");
+	return getData('GetSchoolData', array($data, $code));
 }
 
-// Run SQL query to get school data.
-function getData($procedure) {
-	$db = new DBConnect(DB_HOST, DB_USER, DB_PASS);
-	$db->selectDB(DB_NAME);
-	$result = $db->runQuery($procedure);
+/*
+ * Run SQL query to get school data.
+ */
+function getData($name, Array $parameters=array()) {
+	$db = new DB(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+	$result = $db->executeStatement($name, $parameters);
 	$json_array = array();
-	while($row = mysql_fetch_assoc($result)) {
+	while($row = mysqli_fetch_assoc($result)) {
 		array_push($json_array, $row);	
 	}
 	return $json_array;
 }
-
-// Run this sucker!
-run();
 
 ?>
