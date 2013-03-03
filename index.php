@@ -6,6 +6,9 @@ define("DB_PASS", "");
 define("DB_NAME", "schooldata");
 define("DB_HOST", "");
 
+// A label to use for logging errors.
+define("LOG_LABEL", "SchoolData");
+
 // Include required classes.
 require 'classes/limonade/limonade.php';
 require 'classes/db/class.db.php';
@@ -29,9 +32,7 @@ function schoolsSummary() {
 		return json_encode(getSchoolSummary());
 	}
 	catch (DBException $ex) {
-		openlog("SchoolData", LOG_PID, LOG_LOCAL0);
-		syslog(LOG_ERR, $ex->getMessage());
-		closelog();
+		logError($ex->getMessage());
 		header("HTTP/1.0 500 Internal Server Error");
 	}
 }
@@ -53,9 +54,7 @@ function schoolLookup() {
 		return json_encode(getSchoolData($code, $data));
 	}
 	catch (DBException $ex) {
-		openlog("SchoolData", LOG_PID, LOG_LOCAL0);
-		syslog(LOG_ERR, $ex->getMessage());
-		closelog();
+		logError($ex->getMessage());
 		header("HTTP/1.0 500 Internal Server Error");
 	}
 }
@@ -86,6 +85,15 @@ function getData($name, Array $parameters=array()) {
 		array_push($json_array, $row);	
 	}
 	return $json_array;
+}
+
+/*
+ * Log an error.
+ */
+function logError($error) {
+	openlog(LOG_LABEL, LOG_PID, LOG_LOCAL0);
+	syslog(LOG_ERR, $error);
+	closelog();
 }
 
 ?>
