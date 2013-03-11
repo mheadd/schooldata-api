@@ -1,10 +1,10 @@
 <?php
 
 // MySQL credentials and SQL queries.
-define("DB_USER", "");
-define("DB_PASS", "");
-define("DB_NAME", "schooldata");
-define("DB_HOST", "");
+define("DB_USER", getenv("MYSQL_USER"));
+define("DB_PASS", getenv("MYSQL_PASS"));
+define("DB_NAME", getenv("MYSQL_NAME"));
+define("DB_HOST", getenv("MYSQL_HOST"));
 
 // A label to use for logging errors (for greping syslog, yo).
 define("LOG_LABEL", "SchoolData");
@@ -41,7 +41,6 @@ function schoolsSummary() {
  */
 function schoolLookup() {
 	try {
-		
 		// Extract parameters from URL.
 		$code = (int) params('code');
 		$data = params('data');

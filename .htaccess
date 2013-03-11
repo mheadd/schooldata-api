@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+  Options +FollowSymlinks
+  Options +Indexes
+  RewriteEngine on
+  RewriteBase /
+
+  RewriteCond %{SCRIPT_FILENAME} !-f
+  RewriteCond %{SCRIPT_FILENAME} !-d
+
+  RewriteRule ^([0-9]{4}\/?[\w]*?)$  index.php?uri=$1    [NC,L,QSA]
+</IfModule>
