@@ -9,4 +9,4 @@ A simple LAMP-based REST API for information about schools in the Philadelphia S
 * [Limonade](http://limonade-php.github.com/) micro framework for PHP.
 * Lat/Lon added to school district data using City of Philadelphia geocoder service and [OpenRefine](http://openrefine.org/).
 
-Documentation on how to query the API [can be found here](/schooldata-api/wiki).
+Documentation on how to query the API [can be found here](https://github.com/mheadd/schooldata-api/wiki).
