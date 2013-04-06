@@ -80,6 +80,9 @@ CREATE TABLE school_serious_incidents (
 	theft INT(5)
 );
 
+-- Modify columns name in table to match otehr tables.
+ALTER TABLE school_serious_incidents CHANGE ulcs_no school_code INT(4);
+
 DROP TABLE IF EXISTS school_student;
 CREATE TABLE school_student (
 	school_code INT(4),
