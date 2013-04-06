@@ -27,7 +27,7 @@ function schoolsSummary() {
 	try {
 
 		// Get callback parameter (if used).
-		$callback = $_GET["callback"];
+		@$callback = $_GET["callback"];
 
 		// Render JSON response.
 		return generateResponse('GetSchoolSummary', $callback);
@@ -49,7 +49,7 @@ function schoolLookup() {
 		$data = params('data');
 
 		// Get callback parameter (if used).
-		$callback = $_GET["callback"];
+		@$callback = $_GET["callback"];
 
 		// Render JSON response.
 		$data = $data ? $data : 'school_information';
