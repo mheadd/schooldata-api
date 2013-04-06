@@ -24,7 +24,8 @@ CREATE TABLE school_information (
 	hpaddr VARCHAR(60),
 	school_level_name VARCHAR(30),
 	latitude FLOAT,
-	longitude FLOAT
+	longitude FLOAT,
+	closure TINYINT(1)
 );
 
 DROP TABLE IF EXISTS school_enrollment;
