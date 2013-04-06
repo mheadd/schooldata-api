@@ -25,10 +25,12 @@ run();
  */
 function schoolsSummary() {
 	try {
-		// Set response header.
-		header('Content-type: application/json');
+
+		// Get callback parameter (if used).
+		$callback = $_GET["callback"];
+
 		// Render JSON response.
-		return json_encode(getData('GetSchoolSummary'));
+		return generateResponse('GetSchoolSummary', $callback);
 	}
 	catch (DBException $ex) {
 		logError($ex->getMessage());
@@ -41,19 +43,40 @@ function schoolsSummary() {
  */
 function schoolLookup() {
 	try {
+		
 		// Extract parameters from URL.
 		$code = (int) params('code');
 		$data = params('data');
-		// Set response header.
-		header('Content-type: application/json');
+
+		// Get callback parameter (if used).
+		$callback = $_GET["callback"];
+
 		// Render JSON response.
 		$data = $data ? $data : 'school_information';
-		return json_encode(getData('GetSchoolData', array($data, $code)));
+		return generateResponse('GetSchoolData', $callback, array($data, $code));
 	}
 	catch (DBException $ex) {
 		logError($ex->getMessage());
 		header("HTTP/1.0 500 Internal Server Error");
 	}
+}
+
+/*
+ * Generate the JSON response from the API.
+ */
+function generateResponse($name, $callback, Array $parameters=array()) {
+
+	$response = json_encode(getData($name, $parameters));
+
+	if($callback) {
+		header('Content-type: application/javascript');
+		return "$callback($response)";
+	}
+	else {
+		header('Content-type: application/json');
+		return $response;
+	}
+
 }
 
 /*
