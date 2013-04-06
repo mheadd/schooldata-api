@@ -1,6 +1,6 @@
-#Philadelphia School District API
+#Philadelphia School Inforamtion API
 
-A simple LAMP-based REST API for Philadelphia School District data. 
+A simple LAMP-based REST API for information about schools in the Philadelphia School District data. 
 
 ##This project uses
 
@@ -8,3 +8,5 @@ A simple LAMP-based REST API for Philadelphia School District data.
 * PHP / MySQL
 * [Limonade](http://limonade-php.github.com/) micro framework for PHP.
 * Lat/Lon added to school district data using City of Philadelphia geocoder service and [OpenRefine](http://openrefine.org/).
+
+Documentation on how to query the API [can be found here](/wiki).
