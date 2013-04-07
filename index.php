@@ -70,7 +70,7 @@ function generateResponse($name, $callback, Array $parameters=array()) {
 
 	if($callback) {
 		header('Content-type: application/javascript');
-		return "$callback($response)";
+		return "$callback($response);";
 	}
 	else {
 		header('Content-type: application/json');
