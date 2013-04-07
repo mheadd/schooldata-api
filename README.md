@@ -1,4 +1,4 @@
-#Philadelphia School Inforamtion API
+#Philadelphia School Information API
 
 A simple LAMP-based REST API for information about schools in the Philadelphia School District data. 
 
