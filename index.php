@@ -15,6 +15,7 @@ require 'classes/db/class.db.php';
 
 // Routes for HTTP requests.
 dispatch('/', 'schoolsSummary');
+dispatch('/closing', 'SchoolClosingSummary')
 dispatch('/:code/:data', 'schoolLookup');
 
 // Run this sucker!
@@ -34,7 +35,25 @@ function schoolsSummary() {
 	}
 	catch (DBException $ex) {
 		logError($ex->getMessage());
-		header("HTTP/1.0 500 Internal Server Error");
+		header("HTTP/1.1 500 Internal Server Error");
+	}
+}
+
+/*
+ * Return summary for schools slated for closure.
+ */
+function SchoolClosingSummary() {
+	try {
+
+		// Get callback parameter (if used).
+		@$callback = $_GET["callback"];
+
+		// Render JSON response.
+		return generateResponse('GetSchoolClosingSummary', $callback);
+	}
+	catch (DBException $ex) {
+		logError($ex->getMessage());
+		header("HTTP/1.1 500 Internal Server Error");
 	}
 }
 
@@ -57,7 +76,7 @@ function schoolLookup() {
 	}
 	catch (DBException $ex) {
 		logError($ex->getMessage());
-		header("HTTP/1.0 500 Internal Server Error");
+		header("HTTP/1.1 500 Internal Server Error");
 	}
 }
 
@@ -67,6 +86,8 @@ function schoolLookup() {
 function generateResponse($name, $callback, Array $parameters=array()) {
 
 	$response = json_encode(getData($name, $parameters));
+
+	// Add caching headers?
 
 	if($callback) {
 		header('Content-type: application/javascript');

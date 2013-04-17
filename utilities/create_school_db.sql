@@ -128,11 +128,16 @@ BEGIN
 	EXECUTE STMT USING @code;
 END$$
 
-DROP PROCEDURE IF EXISTS `schooldata`.`getSchoolSummary`$$
+DROP PROCEDURE IF EXISTS `schooldata`.`GetSchoolSummary`$$
 
 CREATE PROCEDURE `schooldata`.`getSchoolSummary`()
 BEGIN
 	SELECT school_name_1, school_code, school_level_name, hpaddr, latitude, longitude FROM school_information;
+END$$
+
+CREATE PROCEDURE `schooldata`.`GetSchoolClosingSummary`()
+BEGIN
+	SELECT school_name_1, school_code, school_level_name, hpaddr, latitude, longitude FROM school_information WHERE closure ORDER BY school_name_1;
 END$$
 
 DELIMITER ;
