@@ -8,4 +8,5 @@
   RewriteCond %{SCRIPT_FILENAME} !-d
 
   RewriteRule ^([0-9]{4}\/?[\w]*?)$  index.php?uri=$1    [NC,L,QSA]
+  RewriteRule ^(closing)$  index.php?uri=$1    [NC,L,QSA]
 </IfModule>

@@ -15,7 +15,7 @@ require 'classes/db/class.db.php';
 
 // Routes for HTTP requests.
 dispatch('/', 'schoolsSummary');
-dispatch('/closing', 'SchoolClosingSummary');
+dispatch('/closing', 'schoolClosingSummary');
 dispatch('/:code/:data', 'schoolLookup');
 
 // Run this sucker!
@@ -42,7 +42,7 @@ function schoolsSummary() {
 /*
  * Return summary for schools slated for closure.
  */
-function SchoolClosingSummary() {
+function schoolClosingSummary() {
 	try {
 
 		// Get callback parameter (if used).
