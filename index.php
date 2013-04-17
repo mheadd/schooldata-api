@@ -15,7 +15,7 @@ require 'classes/db/class.db.php';
 
 // Routes for HTTP requests.
 dispatch('/', 'schoolsSummary');
-dispatch('/closing', 'SchoolClosingSummary')
+dispatch('/closing', 'SchoolClosingSummary');
 dispatch('/:code/:data', 'schoolLookup');
 
 // Run this sucker!
