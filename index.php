@@ -87,7 +87,10 @@ function generateResponse($name, $callback, Array $parameters=array()) {
 
 	$response = json_encode(getData($name, $parameters));
 
-	// Add caching headers?
+	// Caching headers
+	header('Cache-control: public');
+	header("Pragma: cache");
+	header('Expires: ' . gmdate("D, d M Y H:i:s", time() + 12000) . " GMT");
 
 	if($callback) {
 		header('Content-type: application/javascript');
