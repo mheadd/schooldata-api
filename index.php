@@ -14,9 +14,10 @@ require 'classes/limonade/limonade.php';
 require 'classes/db/class.db.php';
 
 // Routes for HTTP requests.
-dispatch('/', 'schoolsSummary');
-dispatch('/closing', 'schoolClosingSummary');
-dispatch('/:code/:data', 'schoolLookup');
+dispatch('/', 'schoolSummaryByZip');
+//dispatch('/closing', 'schoolClosingSummary');
+//dispatch(array('/zip/:postal', array("postal")),'schoolSummaryByZip');
+//dispatch(array('/:code/:data', array("code", "data")), 'schoolLookup');
 
 // Run this sucker!
 run();
@@ -73,6 +74,27 @@ function schoolLookup() {
 		// Render JSON response.
 		$data = $data ? $data : 'school_information';
 		return generateResponse('GetSchoolData', $callback, array($data, $code));
+	}
+	catch (DBException $ex) {
+		logError($ex->getMessage());
+		header("HTTP/1.1 500 Internal Server Error");
+	}
+}
+
+/*
+ * Lookup school information by postal code.
+ */
+function schoolSummaryByZip() {
+	try {
+		
+		// Extract parameters from URL.
+		//$data = params('postal');
+
+		// Get callback parameter (if used).
+		@$callback = $_GET["callback"];
+
+		// Render JSON response.
+		return generateResponse('GetSchoolSummaryByZip', $callback, array('19139'));
 	}
 	catch (DBException $ex) {
 		logError($ex->getMessage());
